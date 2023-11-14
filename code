@@ -1,0 +1,75 @@
+// ==UserScript==
+// @name         Cripto
+// @namespace   https://cripto.tiiny.site
+// @version      0.1
+// @description  Script para obtener la llave y descifrar mensajes en la consola.
+// @author       Tu Nombre
+// @match        https://cripto.tiiny.site
+// @require      https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js
+// @grant        none
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  var parrafo = document.querySelector('p');  // Cambia 'p' por el selector correcto si es necesario
+
+  if (!parrafo) {
+    console.error('No se encontró el párrafo objetivo.');
+    return;
+  }
+
+  var contenido = parrafo.innerText;
+
+  // Supongamos que las oraciones terminan con un punto y espacio
+  var oraciones = contenido.split('. ');
+  var primerosCaracteres = oraciones.map(function(oracion) {
+    return oracion.trim().charAt(0);
+  });
+
+  var llave = primerosCaracteres.join('');
+  console.log("La llave es: " + llave);
+
+  
+  // Buscamos todos los divs que comienzan con la clase 'M'
+  var divsM = document.querySelectorAll('div[class^="M"]');
+
+  // Verificamos si se encontraron divs
+  if (divsM.length === 0) {
+    console.error('No se encontraron mensajes cifrados.');
+    return;
+  }
+
+  // Obtenemos la cantidad de mensajes cifrados
+  var cantidadMensajes = divsM.length;
+  console.log("Los mensajes cifrados son: " + cantidadMensajes);
+
+let script =document.createElement ('script');
+script.src ="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js";
+script.integrity = "sha384-tQVxvJ3v4O7vG5bmU3HpV3Q7eirF8L/5hN65nRjQkbjH5Kzyw00GxmMoFfL9Og9j";
+script.crossOrigin ='anonymous';
+'anonymous'
+
+// Supongamos que 'cipherText' es el mensaje cifrado y 'key' es la llave obtenida
+var cipherText = "Cifrado";
+var key = "Llave";
+
+// Decodificar el mensaje cifrado y la llave de Base64 si es necesario
+var decodedCipherText = CryptoJS.enc.Base64.parse(cipherText);
+var decodedKey = CryptoJS.enc.Utf8.parse(key); // Cambiado a Utf8 para la llave
+
+// Realizar el descifrado usando Triple DES
+var decrypted = CryptoJS.TripleDES.decrypt(
+  { ciphertext: decodedCipherText },
+  decodedKey,
+  { mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 }
+);
+
+// Obtener el resultado en texto plano
+var decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
+
+console.log("Mensaje descifrado:", decryptedText);
+
+  
+})();
+
